@@ -31,7 +31,6 @@ namespace enozom.DAL.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Author")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -48,13 +47,11 @@ namespace enozom.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Author = "Author A",
-                            Title = "Clean code"
+                            Title = "Clean Code"
                         },
                         new
                         {
                             Id = 2,
-                            Author = "Author B",
                             Title = "Algorithms"
                         });
                 });
@@ -70,14 +67,13 @@ namespace enozom.DAL.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("StatusId");
 
                     b.ToTable("BookCopy");
 
@@ -86,53 +82,19 @@ namespace enozom.DAL.Migrations
                         {
                             Id = 1,
                             BookId = 1,
-                            StatusId = 1
+                            status = "Good"
                         },
                         new
                         {
                             Id = 2,
-                            BookId = 1,
-                            StatusId = 2
-                        },
-                        new
-                        {
-                            Id = 3,
                             BookId = 2,
-                            StatusId = 1
-                        });
-                });
-
-            modelBuilder.Entity("enozom.Domain.Models.BookCopyStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BookCopyStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Status = "Good"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Status = "Damaged"
+                            status = "Good"
                         },
                         new
                         {
                             Id = 3,
-                            Status = "Lost"
+                            BookId = 1,
+                            status = "Good"
                         });
                 });
 
@@ -198,29 +160,27 @@ namespace enozom.DAL.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ActualReturnDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("BorrowDate")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int>("CopyId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpectedReturnDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("ReturnStatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("ReturnStatus")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("actualReturnDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("borrowedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("expectedReturnDate")
+                        .HasColumnType("datetime(6)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CopyId");
-
-                    b.HasIndex("ReturnStatusId");
 
                     b.HasIndex("StudentId");
 
@@ -229,46 +189,32 @@ namespace enozom.DAL.Migrations
 
             modelBuilder.Entity("enozom.Domain.Models.BookCopy", b =>
                 {
-                    b.HasOne("enozom.Domain.Models.Book", "Book")
+                    b.HasOne("enozom.Domain.Models.Book", "book")
                         .WithMany("BookCopies")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("enozom.Domain.Models.BookCopyStatus", "Status")
-                        .WithMany("BookCopies")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Status");
+                    b.Navigation("book");
                 });
 
             modelBuilder.Entity("enozom.Domain.Models.StudentBorrowBook", b =>
                 {
-                    b.HasOne("enozom.Domain.Models.BookCopy", "BookCopy")
-                        .WithMany("BorrowRecords")
+                    b.HasOne("enozom.Domain.Models.BookCopy", "bookCopy")
+                        .WithMany("StudentBorrowBook")
                         .HasForeignKey("CopyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("enozom.Domain.Models.BookCopyStatus", "ReturnStatus")
-                        .WithMany()
-                        .HasForeignKey("ReturnStatusId");
-
-                    b.HasOne("enozom.Domain.Models.Student", "Student")
-                        .WithMany("BorrowedBooks")
+                    b.HasOne("enozom.Domain.Models.Student", "student")
+                        .WithMany("StudentBorrowBook")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BookCopy");
+                    b.Navigation("bookCopy");
 
-                    b.Navigation("ReturnStatus");
-
-                    b.Navigation("Student");
+                    b.Navigation("student");
                 });
 
             modelBuilder.Entity("enozom.Domain.Models.Book", b =>
@@ -278,17 +224,12 @@ namespace enozom.DAL.Migrations
 
             modelBuilder.Entity("enozom.Domain.Models.BookCopy", b =>
                 {
-                    b.Navigation("BorrowRecords");
-                });
-
-            modelBuilder.Entity("enozom.Domain.Models.BookCopyStatus", b =>
-                {
-                    b.Navigation("BookCopies");
+                    b.Navigation("StudentBorrowBook");
                 });
 
             modelBuilder.Entity("enozom.Domain.Models.Student", b =>
                 {
-                    b.Navigation("BorrowedBooks");
+                    b.Navigation("StudentBorrowBook");
                 });
 #pragma warning restore 612, 618
         }

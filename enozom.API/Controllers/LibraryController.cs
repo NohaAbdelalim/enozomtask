@@ -19,31 +19,17 @@ namespace enozom.API.Controllers
             _libraryService = libraryService;
             _mapper = mapper;
         }
-        [HttpPost("borrow")]
-        public async Task<IActionResult> BorrowBookCopy([FromBody] BorrowBookDto borrowBookDto)
-        {
-            await _libraryService.BorrowBookCopyAsync(borrowBookDto.CopyId, borrowBookDto.ExpectedReturnDate);
-            return Ok();
-        }
-
-        [HttpPost("return")]
-        public async Task<IActionResult> ReturnBookCopy([FromBody] returnBookDto returnBookDto)
-        {
-            await _libraryService.ReturnBookCopyAsync(returnBookDto.CopyId, returnBookDto.ReturnDate,returnBookDto.Statusname);
-            return Ok();
-        }
+       
+       
         [HttpGet("status")]
-        public async Task<IActionResult> GetCurrentStatusForAllBooks()
+      
+        public async Task<IActionResult> GetAvailableCopies()
         {
-            var bookCopies = await _libraryService.GetCurrentStatusForAllBooksAsync();
-            if (bookCopies == null)
-            {
-                return BadRequest("notfound");
-            }
-            var toReturn = _mapper.Map<Dto>(bookCopies);
-            return Ok(toReturn);
+            var availableCopies = await _libraryService.GetBookCurrentStatus();
+            return Ok(availableCopies);
         }
-
+       
+       
 
     }
 }

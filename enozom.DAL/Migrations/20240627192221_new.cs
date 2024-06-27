@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace enozom.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class @new : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace enozom.DAL.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Author = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Author = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -59,9 +59,9 @@ namespace enozom.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BookId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BookId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -81,12 +81,12 @@ namespace enozom.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    StudentId = table.Column<int>(type: "int", nullable: false),
                     CopyId = table.Column<int>(type: "int", nullable: false),
-                    BorrowDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ExpectedReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ActualReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    ReturnStatus = table.Column<string>(type: "longtext", nullable: false)
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    borrowedDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    expectedReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    actualReturnDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    ReturnStatus = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -112,8 +112,8 @@ namespace enozom.DAL.Migrations
                 columns: new[] { "Id", "Author", "Title" },
                 values: new object[,]
                 {
-                    { 1, "Author A", "Clean code" },
-                    { 2, "Author B", "Algorithms" }
+                    { 1, null, "Clean Code" },
+                    { 2, null, "Algorithms" }
                 });
 
             migrationBuilder.InsertData(
@@ -128,12 +128,12 @@ namespace enozom.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "BookCopy",
-                columns: new[] { "Id", "BookId", "Status" },
+                columns: new[] { "Id", "BookId", "status" },
                 values: new object[,]
                 {
                     { 1, 1, "Good" },
-                    { 2, 1, "Good" },
-                    { 3, 2, "Good" }
+                    { 2, 2, "Good" },
+                    { 3, 1, "Good" }
                 });
 
             migrationBuilder.CreateIndex(

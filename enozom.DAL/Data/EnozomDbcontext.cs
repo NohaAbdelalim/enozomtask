@@ -13,54 +13,38 @@ namespace enozom.DAL.Data
         public DbSet<Book> Books;
         public DbSet<BookCopy> BooksCopy;
         public DbSet<StudentBorrowBook> StudentBorrowBook;
-        public DbSet<BookCopyStatus> BooksCopyStatus;
+       
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<StudentBorrowBook>(entity =>
             {
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.BorrowDate)
-                    .IsRequired();
-
-                entity.Property(e => e.ExpectedReturnDate)
-                    .IsRequired();
-
-               
-
-                entity.HasOne(e => e.Student)
-                    .WithMany(s => s.BorrowedBooks)
+                
+                entity.HasOne(e => e.student)
+                    .WithMany(s => s.StudentBorrowBook)
                     .HasForeignKey(e => e.StudentId);
 
 
-                entity.HasOne(e => e.BookCopy)
-                    .WithMany(bc => bc.BorrowRecords)
-                    .HasForeignKey(e => e.CopyId);
-                  
+               entity.HasOne(br => br.bookCopy)
+                .WithMany(bc => bc.StudentBorrowBook)
+                .HasForeignKey(br => br.CopyId);
+
             });
 
             modelBuilder.Entity<BookCopy>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                 entity.HasOne(bc => bc.book)
+                .WithMany(b => b.BookCopies)
+                .HasForeignKey(bc => bc.BookId);
 
-               
 
-                entity.HasOne(e => e.Book)
-                    .WithMany(b => b.BookCopies)
-                    .HasForeignKey(e => e.BookId);
-
-                entity
-               .HasOne(bc => bc.Status)
-               .WithMany(bcs => bcs.BookCopies)
-               .HasForeignKey(bc => bc.StatusId);
               
                 // Seeding initial data
                 entity.HasData(
-                    new BookCopy { Id = 1, BookId = 1, StatusId = 1 },
-                    new BookCopy { Id = 2, BookId = 1, StatusId = 2 },
-                    new BookCopy { Id = 3, BookId = 2, StatusId = 1 }
+                new BookCopy { Id = 1, status = "Good", BookId = 1 },
+                new BookCopy { Id = 2, status = "Good", BookId = 2 },
+                new BookCopy { Id = 3, status = "Good", BookId = 1 }
                 );
 
             });
@@ -102,30 +86,17 @@ namespace enozom.DAL.Data
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Author)
-                    .IsRequired()
+                   
                     .HasMaxLength(100);
                 entity.HasData(
-              new Book { Id = 1, Title = "Clean code", Author = "Author A" },
-              new Book { Id = 2, Title = "Algorithms", Author = "Author B" }
-              
+               new Book { Id = 1, Title = "Clean Code" },
+                new Book { Id = 2, Title = "Algorithms" }
+
               );
             
             
             });
-            modelBuilder.Entity<BookCopyStatus>(entity =>
-            {
-                entity.HasKey(bcs => bcs.Id);
-
-                entity.Property(bcs => bcs.Status)
-                    .IsRequired();
-
-                // Seed initial data for BookCopyStatus
-                entity.HasData(
-                    new BookCopyStatus { Id = 1, Status = "Good" },
-                    new BookCopyStatus { Id = 2, Status = "Damaged" },
-                    new BookCopyStatus { Id = 3, Status = "Lost" }
-                );
-            });
+           
         }
     }
 }

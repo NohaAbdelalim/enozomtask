@@ -2,8 +2,7 @@
 {
     public class returnBookDto
     {
-        public int CopyId { get; set; }
-        public DateTime ReturnDate { get; set; }
-        public string Statusname { get; set; }
+        public int BookCopyId { get; set; }
+        public string ReturnStatus { get; set; }
     }
 }

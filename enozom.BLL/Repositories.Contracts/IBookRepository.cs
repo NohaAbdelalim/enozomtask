@@ -9,7 +9,8 @@ namespace enozom.Domain.Repositories.Contracts
 {
     public interface IBookRepository
     {
-      Task<IEnumerable<Book>> GetAllWithCopiesAndStatus();
-        Task<Book> GetBookByIdAsync(int bookId);
+     
+            Task<IEnumerable<BookCopy>> GetBookCurrentStatus();
+        
     }
 }

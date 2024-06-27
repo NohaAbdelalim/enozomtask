@@ -21,14 +21,12 @@ namespace enozom.API
 
             // Add services to the container.
             builder.Services.AddControllers();
-           builder. Services.AddScoped<IBookBorrowRepository,StudentBorrowRepository>();
-           builder. Services.AddScoped<IBookRepository, BookRepository>();
-            builder.Services.AddScoped<IBookStatusRepository,BookCopyStatusRepository>();
-            builder.Services.AddScoped<IcopyRepository,BookCopyRepository>();
-
-            // Register services
-           builder. Services.AddScoped<ILibraryService, LibraryService>();
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
+           builder. Services.AddScoped<ILibraryService,LibraryService>();
+           builder. Services.AddScoped<IBookRepository, BookCopyRepository>();
+           
+           // // Register services
+           //builder. Services.AddScoped<ILibraryService, LibraryService>();
+           // builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddDbContext<EnozomDbContext>(options =>
                 options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),

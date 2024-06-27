@@ -1,4 +1,5 @@
-﻿using enozom.Domain.Models;
+﻿using enozom.API.Dtos;
+using enozom.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace enozom.Domain.Services.Contracts
 {
     public interface ILibraryService
     {
-        Task<IEnumerable<BookCopy>> GetCurrentStatusForAllBooksAsync();
-        Task ReturnBookCopyAsync(int CopyId, DateTime ReturnDate, string Statusname);
-        Task BorrowBookCopyAsync(int copyId, DateTime expectedReturnDate);
+        //Task BorrowBookAsync(int bookCopyId, int studentId, DateTime expectedReturnDate);
+        //Task ReturnBookAsync(int bookCopyId, string status);
+        Task<IEnumerable<BookCopyDto>> GetBookCurrentStatus();
 
     }
 }
