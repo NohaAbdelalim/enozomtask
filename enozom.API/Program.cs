@@ -25,9 +25,7 @@ namespace enozom.API
            builder. Services.AddScoped<IBookRepository, BookCopyRepository>();
            
            // // Register services
-           //builder. Services.AddScoped<ILibraryService, LibraryService>();
-           // builder.Services.AddAutoMapper(typeof(MappingProfile));
-
+         
             builder.Services.AddDbContext<EnozomDbContext>(options =>
                 options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
                     ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));

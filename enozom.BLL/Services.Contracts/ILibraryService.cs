@@ -11,8 +11,6 @@ namespace enozom.Domain.Services.Contracts
 {
     public interface ILibraryService
     {
-        //Task BorrowBookAsync(int bookCopyId, int studentId, DateTime expectedReturnDate);
-        //Task ReturnBookAsync(int bookCopyId, string status);
         Task<IEnumerable<BookCopyDto>> GetBookCurrentStatus();
 
     }
