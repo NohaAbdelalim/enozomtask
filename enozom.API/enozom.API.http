@@ -1,0 +1,6 @@
+@enozom.API_HostAddress = http://localhost:5130
+
+GET {{enozom.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
